@@ -1,0 +1,53 @@
+{
+  "name": "loaf/settings",
+  "description": "Webhub Loaf Settings Plugin",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tom Lankhorst",
+      "email": "tomlankhorst@webhub.nl"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.org:webhubdev/loaf-base.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.org:webhubdev/loaf-admin.git"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "laravel/framework": "5.5.*"
+  },
+  "require-dev": {
+    "orchestra/testbench": "~3.5",
+    "loaf/base": "dev-master",
+    "loaf/admin": "dev-master",
+    "phpunit/phpunit": "^6.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Loaf\\Settings\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Loaf\\Settings\\Test\\": "tests",
+      "Loaf\\Base\\Tests\\": "vendor/loaf/base/tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Loaf\\Settings\\SettingsServiceProvider"
+      ],
+      "aliases": {
+        "Settings": "Loaf\\Settings\\SettingsFacade"
+      }
+    }
+  }
+}
