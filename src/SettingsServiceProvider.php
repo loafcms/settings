@@ -8,16 +8,32 @@ use Illuminate\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Logging\Log;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
+use Loaf\Base\Contracts\Menu\AdminMenu;
+use Loaf\Base\Contracts\Menu\Builder;
 use Loaf\Base\Contracts\Settings\SettingsManager as SettingsManagerContract;
 
 use Loaf\Settings\Models\BooleanSetting;
 
 class SettingsServiceProvider extends \Illuminate\Support\ServiceProvider {
 
-    public function boot()
+    /**
+     * @var AdminMenu
+     */
+    protected $admin_menu;
+
+    /**
+     * @var SettingsManager
+     */
+    protected $settings_manager;
+
+    public function boot( AdminMenu $admin_menu, SettingsManager $settings_manager )
     {
+        $this->admin_menu = $admin_menu;
+        $this->settings_manager = $settings_manager;
+
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__ . '/../routes/settings.php');
+        $this->registerMenu();
     }
 
     public function register()
@@ -48,6 +64,28 @@ class SettingsServiceProvider extends \Illuminate\Support\ServiceProvider {
             $manager->parseConfig();
         });
 
+    }
+
+    public function registerMenu()
+    {
+
+        $this->admin_menu->registerCallback('settings', 'main', function(Builder $m) {
+
+            $m->group(array('prefix' => 'settings'), function(Builder $n)
+            {
+                $n->add(ucfirst(trans('loaf/admin::adminmenu.settings')))
+                    ->nickname('settings')
+                    ->data('cleanup', true)
+                    ->data('order', 1010)
+                    ->link->href('#');
+
+                foreach( $this->settings_manager->getSections() as $key => $section ) {
+                    $n->settings->add( $section->getLabel(),  ['route'=>['admin.settings', 'group'=>$key]]);
+                }
+
+            });
+
+        });
     }
 
 }
