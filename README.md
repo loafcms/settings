@@ -1,4 +1,4 @@
 Loaf Settings
 ======
 
-Customizable settings for Loaf
+User-customizable settings for Loaf. 
