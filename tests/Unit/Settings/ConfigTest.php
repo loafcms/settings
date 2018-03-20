@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use Loaf\Base\Contracts\Settings\SettingsException;
 use Loaf\Base\Contracts\Settings\SettingsManager;
-use Loaf\Base\Tests\TestCase;
+use Loaf\Settings\Tests\TestCase;
 
 class ConfigTest extends TestCase
 {

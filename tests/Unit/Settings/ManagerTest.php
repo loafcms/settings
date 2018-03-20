@@ -5,6 +5,10 @@ namespace Loaf\Settings\Tests\Unit\Settings;
 use Illuminate\Cache\ArrayStore;
 use Illuminate\Config\Repository;
 
+use Illuminate\Contracts\Logging\Log as LogContract;
+use Illuminate\Contracts\Validation\Factory as ValidationFactoryContract;
+use Illuminate\Contracts\Cache\Repository as CacheRepositoryContract;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use Loaf\Base\Contracts\Settings\ConfigElement;
@@ -15,7 +19,10 @@ use Loaf\Settings\Configuration\Field;
 use Loaf\Settings\Configuration\Group;
 use Loaf\Settings\Configuration\Section;
 
-class ManagerTest extends \Loaf\Base\Tests\TestCase
+use Loaf\Settings\Models\BooleanSetting;
+use Loaf\Settings\Tests\TestCase;
+
+class ManagerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -33,6 +40,13 @@ class ManagerTest extends \Loaf\Base\Tests\TestCase
     {
         parent::setUp();
         $this->manager = $this->getManager();
+
+        $this->manager->registerType('string', ['validation' => 'string']);
+        $this->manager->registerType('integer', ['validation' => 'integer']);
+        $this->manager->registerType('array', ['validation' => 'array']);
+        $this->manager->registerType('boolean', ['validation' => 'array', 'model' => BooleanSetting::class]);
+
+        $this->manager->parseConfig();
         $this->reflection = new \ReflectionClass( \Loaf\Settings\SettingsManager::class );
     }
 
@@ -240,10 +254,9 @@ class ManagerTest extends \Loaf\Base\Tests\TestCase
         $this->assertFalse( $cache->has($key) );
 
         $manager = $this->getManager( $cache );
+        $manager->parseConfig();
 
         $this->assertTrue( $cache->has($key) );
-
-        $manager->parseConfig();
     }
 
     public function testValidCache()
@@ -282,15 +295,14 @@ class ManagerTest extends \Loaf\Base\Tests\TestCase
         );
     }
 
-    protected function getManager( \Illuminate\Contracts\Cache\Repository $cache = null ) : SettingsManager
+    protected function getManager( CacheRepositoryContract $cache = null ) : SettingsManager
     {
-        $dependencies = [ 'config' => new Repository( $this->getConfig() ) ];
-
-        // If no cache defined, let the app resolve it
-        if( $cache )
-            $dependencies['cache'] = $cache;
-
-        return app()->makeWith( \Loaf\Settings\SettingsManager::class, $dependencies );
+        return new \Loaf\Settings\SettingsManager(
+            app( ValidationFactoryContract::class ),
+            new Repository( $this->getConfig() ),
+            $cache ?? app( CacheRepositoryContract::class ),
+            app( LogContract::class )
+        );
     }
 
     protected function invokeManagerMethod( string $method, array $args = [] )

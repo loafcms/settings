@@ -1,6 +1,6 @@
 <?php
 
-$factory->define( \Loaf\Base\Models\Setting::class, function (Faker\Generator $faker) {
+$factory->define( \Loaf\Settings\Setting::class, function (Faker\Generator $faker) {
 
     $attributes = [];
 

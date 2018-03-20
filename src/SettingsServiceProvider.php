@@ -40,7 +40,7 @@ class SettingsServiceProvider extends \Illuminate\Support\ServiceProvider {
             $manager->registerType('array', ['validation' => 'array']);
             $manager->registerType('boolean', ['validation' => 'boolean', 'model' => BooleanSetting::class]);
 
-            $manager->mergeConfigFrom( __DIR__."/../../../config/settings.php" );
+            $manager->mergeConfigFrom( __DIR__."/../config/settings.php" );
         } );
 
         $this->app->afterResolving( SettingsManager::class, function (SettingsManager $manager) {

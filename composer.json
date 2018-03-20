@@ -36,8 +36,9 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Loaf\\Settings\\Test\\": "tests",
-      "Loaf\\Base\\Tests\\": "vendor/loaf/base/tests/"
+      "Loaf\\Settings\\Tests\\": "tests",
+      "Loaf\\Base\\Tests\\": "vendor/loaf/base/tests/",
+      "Loaf\\Admin\\Tests\\": "vendor/loaf/admin/tests/"
     }
   },
   "extra": {

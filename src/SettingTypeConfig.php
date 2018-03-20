@@ -3,8 +3,7 @@
 namespace Loaf\Settings;
 
 use Illuminate\Contracts\Validation\Factory;
-use Loaf\Base\Contracts\Settings\SettingsException;
-use Loaf\Base\Settings\Models\SimpleSetting;
+use Loaf\Settings\Models\SimpleSetting;
 
 class SettingTypeConfig extends ConfigurableElement {
 

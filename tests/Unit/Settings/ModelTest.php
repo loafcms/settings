@@ -5,8 +5,8 @@ namespace Loaf\Settings\Tests\Unit\Settings;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 
-use Loaf\Base\Models\Setting;
-use Loaf\Base\Tests\TestCase;
+use Loaf\Settings\Setting;
+use Loaf\Settings\Tests\TestCase;
 
 class ModelTest extends TestCase
 {
