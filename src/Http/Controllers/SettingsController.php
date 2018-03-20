@@ -20,8 +20,12 @@ class SettingsController extends Controller
         $this->settings = $settings;
     }
 
+    /**
+     * @todo implement
+     * @param string $group
+     */
     public function group( string $group )
     {
-
+        dd( $group );
     }
 }
