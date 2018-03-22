@@ -2,8 +2,17 @@
 
 namespace Loaf\Settings\Configuration;
 
-class Group extends BaseConfigElement {
+class Group extends BaseConfigElement
+{
 
+    /**
+     * @var Section
+     */
+    protected $parent;
+
+    /**
+     * @var array Map config key to model
+     */
     protected $map = [
         'field' => Field::class
     ];
@@ -15,6 +24,11 @@ class Group extends BaseConfigElement {
             'order' => 'nullable|integer',
             'fields' => 'nullable|array',
         ];
+    }
+
+    public function getPath() : string
+    {
+        return $this->parent->getPath().'.'.$this->key;
     }
 
 }
