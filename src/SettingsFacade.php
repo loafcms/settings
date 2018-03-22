@@ -3,7 +3,7 @@
 namespace Loaf\Settings;
 
 use Illuminate\Support\Facades\Facade;
-use Loaf\Base\Settings\SettingsManager;
+use Loaf\Base\Contracts\Settings\SettingsManager as SettingsManagerContract;
 
 class SettingsFacade extends Facade {
     /**
@@ -11,5 +11,5 @@ class SettingsFacade extends Facade {
      *
      * @return string
      */
-    protected static function getFacadeAccessor() { return SettingsManager::class; }
+    protected static function getFacadeAccessor() { return SettingsManagerContract::class; }
 }
