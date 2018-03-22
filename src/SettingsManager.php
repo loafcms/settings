@@ -296,7 +296,7 @@ class SettingsManager implements SettingsManagerContract
      * @return SettingModel
      * @throws SettingsException
      */
-    protected function getModel( Field $field ) : SettingModel
+    public function getModel( Field $field ) : SettingModel
     {
         $type = $field->type;
 
@@ -314,8 +314,12 @@ class SettingsManager implements SettingsManagerContract
     private function loadSections()
     {
         $sections = collect();
+
         foreach( $this->config->all() as $key => $section_config )
-            $sections[ $key ] = app()->makeWith( Section::class, ['config' => $section_config]);
+            $sections[ $key ] = app()->makeWith( Section::class, [
+                'config' => $section_config,
+                'key' => $key
+            ]);
 
         $this->sections = $sections;
     }
