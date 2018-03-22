@@ -14,4 +14,9 @@ class BooleanSetting extends BaseSetting {
         return (bool) $value;
     }
 
+    public function editView()
+    {
+        return view('loaf/settings::types/boolean/edit', ['field' => $this->field, 'model' => $this]);
+    }
+
 }

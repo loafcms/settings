@@ -30,4 +30,9 @@ interface SettingModel {
      */
     public function deserialize( $value );
 
+    /**
+     * Get the edit view for the setting
+     */
+    public function editView();
+
 }

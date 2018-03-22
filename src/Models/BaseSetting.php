@@ -35,4 +35,12 @@ abstract class BaseSetting implements SettingModel {
         return $value;
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function editView()
+    {
+        return view('loaf/settings::types/base/edit', ['field' => $this->field, 'model' => $this]);
+    }
+
 }
