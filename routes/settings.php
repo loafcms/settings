@@ -7,6 +7,6 @@ Route::group([
     'as'            => 'admin.',
 ], function () {
 
-    Route::get('settings/{group}', 'SettingsController@group')->name('settings');
+    Route::get('settings/{section}', 'SettingsController@group')->name('settings');
 
 });
