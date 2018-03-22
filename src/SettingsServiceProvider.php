@@ -26,19 +26,23 @@ class SettingsServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     protected $settings_manager;
 
-    public function boot( AdminMenu $admin_menu, SettingsManager $settings_manager )
+    public function boot( AdminMenu $admin_menu, SettingsManagerContract $settings_manager )
     {
         $this->admin_menu = $admin_menu;
         $this->settings_manager = $settings_manager;
 
+        $namespace = 'loaf/settings';
+
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__ . '/../routes/settings.php');
+        $this->loadViewsFrom( __DIR__ . '/../resources/views', $namespace);
+        $this->loadTranslationsFrom( __DIR__ . '/../resources/lang', $namespace);
         $this->registerMenu();
     }
 
     public function register()
     {
-        $this->app->singleton('settings.config', function(){
+        $this->app->bind('settings.config', function(){
             return new ConfigRepository();
         } );
 
@@ -79,9 +83,8 @@ class SettingsServiceProvider extends \Illuminate\Support\ServiceProvider {
                     ->data('order', 1010)
                     ->link->href('#');
 
-                foreach( $this->settings_manager->getSections() as $key => $section ) {
-                    $n->settings->add( $section->getLabel(),  ['route'=>['admin.settings', 'group'=>$key]]);
-                }
+                foreach( $this->settings_manager->getSections() as $key => $section )
+                    $n->settings->add( $section->getLabel(),  ['route'=>['admin.settings', 'section' => $key ]]);
 
             });
 
