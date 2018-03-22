@@ -13,7 +13,7 @@ class SettingsController extends Controller
      */
     protected $settings;
 
-    public function __construct(AdminMenu $menu_manager, SettingsManager $settings )
+    public function __construct( AdminMenu $menu_manager, SettingsManager $settings )
     {
         parent::__construct($menu_manager);
 
@@ -24,8 +24,9 @@ class SettingsController extends Controller
      * @todo implement
      * @param string $group
      */
-    public function group( string $group )
+    public function group( string $section )
     {
-        dd( $group );
+        $section = $this->settings->getSection( $section );
+        return view('loaf/settings::settings', compact('section'));
     }
 }
