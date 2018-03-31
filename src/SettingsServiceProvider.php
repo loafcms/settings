@@ -8,13 +8,21 @@ use Illuminate\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Logging\Log;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
+use Illuminate\Support\ServiceProvider;
 use Loaf\Base\Contracts\Menu\AdminMenu;
 use Loaf\Base\Contracts\Menu\Builder;
 use Loaf\Base\Contracts\Settings\SettingsManager as SettingsManagerContract;
 
+use Loaf\Settings\Configuration\Section;
 use Loaf\Settings\Models\BooleanSetting;
+use Loaf\Settings\Policies\SectionPolicy;
 
-class SettingsServiceProvider extends \Illuminate\Support\ServiceProvider {
+use Gate;
+use Loaf\Settings\Types\BooleanSettingType;
+use Loaf\Settings\Types\IntegerSettingType;
+use Loaf\Settings\Types\StringSettingType;
+
+class SettingsServiceProvider extends ServiceProvider {
 
     /**
      * @var AdminMenu
@@ -26,12 +34,23 @@ class SettingsServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     protected $settings_manager;
 
+    /**
+     * Policy mappings for settings
+     *
+     * @var array
+     */
+    protected $policies = [
+        Section::class => SectionPolicy::class
+    ];
+
     public function boot( AdminMenu $admin_menu, SettingsManagerContract $settings_manager )
     {
         $this->admin_menu = $admin_menu;
         $this->settings_manager = $settings_manager;
 
         $namespace = 'loaf/settings';
+
+        $this->registerPolicies();
 
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__ . '/../routes/settings.php');
@@ -56,10 +75,9 @@ class SettingsServiceProvider extends \Illuminate\Support\ServiceProvider {
         });
 
         $this->app->resolving( SettingsManager::class, function( SettingsManager $manager ){
-            $manager->registerType('string', ['validation' => 'string']);
-            $manager->registerType('integer', ['validation' => 'integer']);
-            $manager->registerType('array', ['validation' => 'array']);
-            $manager->registerType('boolean', ['validation' => 'boolean', 'model' => BooleanSetting::class]);
+            $manager->registerType('string', StringSettingType::class);
+            $manager->registerType('integer', IntegerSettingType::class);
+            $manager->registerType('boolean', BooleanSettingType::class);
 
             $manager->mergeConfigFrom( __DIR__."/../config/settings.php" );
         } );
@@ -70,7 +88,7 @@ class SettingsServiceProvider extends \Illuminate\Support\ServiceProvider {
 
     }
 
-    public function registerMenu()
+    protected function registerMenu()
     {
 
         $this->admin_menu->registerCallback('settings', 'main', function(Builder $m) {
@@ -84,11 +102,24 @@ class SettingsServiceProvider extends \Illuminate\Support\ServiceProvider {
                     ->link->href('#');
 
                 foreach( $this->settings_manager->getSections() as $key => $section )
-                    $n->settings->add( $section->getLabel(),  ['route'=>['admin.settings', 'section' => $key ]]);
+                    $n->settings->add( $section->getLabel(),  ['route'=>['admin.settings.editSection', 'section' => $key ]])
+                        ->data('permission', ['view', $section]);
 
             });
 
         });
+    }
+
+    /**
+     * Register the application's policies.
+     *
+     * @return void
+     */
+    protected function registerPolicies()
+    {
+        foreach ($this->policies as $key => $value) {
+            Gate::policy($key, $value);
+        }
     }
 
 }

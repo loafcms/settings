@@ -17,6 +17,11 @@ class Group extends BaseConfigElement
         'field' => Field::class
     ];
 
+    /**
+     * @var Field
+     */
+    public $fields;
+
     public function getConfigValidationRules()
     {
         return [

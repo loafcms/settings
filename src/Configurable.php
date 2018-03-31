@@ -4,11 +4,23 @@ namespace Loaf\Settings;
 
 use Illuminate\Contracts\Validation\Factory;
 
-abstract class ConfigurableElement {
+/**
+ * Class Configurable
+ *
+ * Construction configurable with a configuration
+ *
+ * @package Loaf\Settings
+ */
+abstract class Configurable {
 
     protected $config;
 
     abstract protected function getConfigValidationRules();
+
+    public static function make( array $config )
+    {
+        return app()->makeWith( static::class, compact('config' ) );
+    }
 
     protected function getPublicTypes() : array
     {

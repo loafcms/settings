@@ -4,10 +4,11 @@ namespace Loaf\Settings\Configuration;
 
 use Illuminate\Contracts\Validation\Factory;
 use Loaf\Base\Contracts\Settings\ConfigElement;
+use Loaf\Settings\Configurable;
 use Loaf\Settings\ConfigurableElement;
 use Loaf\Settings\SettingsManager;
 
-abstract class BaseConfigElement extends ConfigurableElement implements ConfigElement
+abstract class BaseConfigElement extends Configurable implements ConfigElement
 {
     protected $map = [];
 

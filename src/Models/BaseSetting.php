@@ -4,8 +4,15 @@ namespace Loaf\Settings\Models;
 
 use Loaf\Settings\Configuration\Field as FieldConfig;
 
-abstract class BaseSetting implements SettingModel {
-
+/**
+ * Class BaseSetting
+ *
+ * Database model for storing a setting
+ *
+ * @package Loaf\Settings\Models
+ */
+abstract class BaseSetting implements SettingModel
+{
     /**
      * @var FieldConfig
      */
@@ -34,13 +41,4 @@ abstract class BaseSetting implements SettingModel {
     {
         return $value;
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function editView()
-    {
-        return view('loaf/settings::types/base/edit', ['field' => $this->field, 'model' => $this]);
-    }
-
 }

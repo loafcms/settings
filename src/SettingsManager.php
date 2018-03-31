@@ -12,9 +12,9 @@ use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Loaf\Settings\Configuration\Field;
 use Loaf\Settings\Configuration\Group;
 use Loaf\Settings\Configuration\Section;
-use Loaf\Settings\Models\SettingModel;
 
 use Illuminate\Support\Collection;
+use Loaf\Settings\Types\SettingType;
 
 class SettingsManager implements SettingsManagerContract
 {
@@ -24,9 +24,18 @@ class SettingsManager implements SettingsManagerContract
     protected const DEFAULT_SCOPE = '0-default';
 
     /**
-     * @var array types, with native types already registered
+     * Registered type to SettingType mapping
+     *
+     * @var array
      */
-    protected $types = [];
+    protected $type_map = [];
+
+    /**
+     * Array of loaded SettingTypes for field paths
+     *
+     * @var array
+     */
+    protected $type_cache = [];
 
     /**
      * @var Collection
@@ -86,7 +95,8 @@ class SettingsManager implements SettingsManagerContract
         if( !($setting = Setting::wherePath( $path )->first()) )
             return $default;
 
-        return $this->getModel( $field )
+        return $this->getSettingType( $field )
+            ->getModel()
             ->deserialize( $setting->value );
     }
 
@@ -97,7 +107,8 @@ class SettingsManager implements SettingsManagerContract
     {
         $field = $this->getField( $path );
 
-        $value = $this->getModel( $field )
+        $value = $this->getSettingType( $field )
+            ->getModel()
             ->serialize( $value );
 
         Setting::firstOrNew([
@@ -122,10 +133,12 @@ class SettingsManager implements SettingsManagerContract
     /**
      * @inheritdoc
      */
-    public function registerType( string $type, array $config = [] )
+    public function registerType( string $type_name, string $type_class )
     {
-        $this->types[ $type ] = app()
-            ->makeWith( SettingTypeConfig::class, compact('type', 'config'));
+        if( !in_array(SettingType::class, class_implements( $type_class ) ) )
+            throw new SettingsException("$type_class is no instance of ".SettingType::class);
+
+        $this->type_map[ $type_name ] = $type_class;
     }
 
     /**
@@ -290,25 +303,6 @@ class SettingsManager implements SettingsManagerContract
     }
 
     /**
-     * Get setting model from field
-     *
-     * @param Field $field
-     * @return SettingModel
-     * @throws SettingsException
-     */
-    public function getModel( Field $field ) : SettingModel
-    {
-        $type = $field->type;
-
-        if( !($type_config = $this->getTypeConfig( $type )) )
-            throw new SettingsException("Setting type $type not registered");
-
-        $model = $type_config->model;
-
-        return new $model( $field );
-    }
-
-    /**
      * Reload all sections from configuration
      */
     private function loadSections()
@@ -324,17 +318,24 @@ class SettingsManager implements SettingsManagerContract
         $this->sections = $sections;
     }
 
-    /**
-     * Get SettingTypeConfig for type id
-     *
-     * @param string $type
-     * @return SettingTypeConfig|null
-     */
-    protected function getTypeConfig( string $type ) : ?SettingTypeConfig
+    public function getSettingType( Field $field ) : SettingType
     {
-        return $this->types[ $type ] ?? null;
-    }
+        $field_path = $field->getPath();
 
+        if( in_array($field_path, $this->type_cache) )
+            return $this->type_cache[ $field_path ];
+
+        $field_type = $field->type;
+
+        if( !array_key_exists($field_type, $this->type_map) )
+            throw new SettingsException("Type $field_type for field $field_path is not registered");
+
+        $type_class = $this->type_map[ $field_type ];
+
+        $type = new $type_class( $field_type, $field );
+
+        return $this->type_cache[ $field_path ] = $type;
+    }
 
     protected function guardAlreadyParsed()
     {

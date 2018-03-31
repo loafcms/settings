@@ -4,6 +4,13 @@ namespace Loaf\Settings\Models;
 
 use Loaf\Settings\Configuration\Field;
 
+/**
+ * Interface SettingModel
+ *
+ * Database model interface
+ *
+ * @package Loaf\Settings\Models
+ */
 interface SettingModel {
 
     /**
@@ -29,10 +36,5 @@ interface SettingModel {
      * @return mixed
      */
     public function deserialize( $value );
-
-    /**
-     * Get the edit view for the setting
-     */
-    public function editView();
 
 }

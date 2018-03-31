@@ -2,6 +2,7 @@
 
 namespace Loaf\Settings\Models;
 
-class SimpleSetting extends BaseSetting {
+class SimpleSetting extends BaseSetting
+{
 
 }
