@@ -7,6 +7,6 @@ Route::group([
     'as'            => 'admin.',
 ], function () {
 
-    Route::get('settings/{section}', 'SettingsController@group')->name('settings');
-
+    Route::get('settings/{section}/edit', 'SettingsController@editSection')->name('settings.editSection');
+    Route::post('settings/{section}', 'SettingsController@updateSection')->name('settings.updateSection');
 });
