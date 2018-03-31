@@ -31,7 +31,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Loaf\\Settings\\": "src"
+      "Loaf\\Settings\\": "src",
+      "Loaf\\Settings\\Database\\": "database"
     }
   },
   "autoload-dev": {
