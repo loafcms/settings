@@ -21,6 +21,9 @@ use Loaf\Settings\Configuration\Section;
 
 use Loaf\Settings\Models\BooleanSetting;
 use Loaf\Settings\Tests\TestCase;
+use Loaf\Settings\Types\BooleanSettingType;
+use Loaf\Settings\Types\IntegerSettingType;
+use Loaf\Settings\Types\StringSettingType;
 
 class ManagerTest extends TestCase
 {
@@ -41,10 +44,9 @@ class ManagerTest extends TestCase
         parent::setUp();
         $this->manager = $this->getManager();
 
-        $this->manager->registerType('string', ['validation' => 'string']);
-        $this->manager->registerType('integer', ['validation' => 'integer']);
-        $this->manager->registerType('array', ['validation' => 'array']);
-        $this->manager->registerType('boolean', ['validation' => 'array', 'model' => BooleanSetting::class]);
+        $this->manager->registerType('string', StringSettingType::class);
+        $this->manager->registerType('integer', IntegerSettingType::class);
+        $this->manager->registerType('boolean', BooleanSettingType::class);
 
         $this->manager->parseConfig();
         $this->reflection = new \ReflectionClass( \Loaf\Settings\SettingsManager::class );
@@ -66,22 +68,6 @@ class ManagerTest extends TestCase
         );
 
         $this->manager->set( $path, $value = 'newvalue' );
-
-        $this->assertSame(
-            $value,
-            $this->manager->get( $path )
-        );
-    }
-
-    public function testSetGetArray()
-    {
-        $path = 'section.group.array';
-
-        $this->assertNull(
-            $this->manager->get( $path )
-        );
-
-        $this->manager->set( $path, $value = ['some', 'array', 'value']);
 
         $this->assertSame(
             $value,
@@ -220,7 +206,7 @@ class ManagerTest extends TestCase
 
     public function testRegisterType()
     {
-        $this->manager->registerType("test-type");
+        $this->manager->registerType("test-type", StringSettingType::class);
 
         $this->manager->mergeConfig([
             'section' => [
@@ -343,9 +329,9 @@ class ManagerTest extends TestCase
                             'string' => [
                                 'type' => 'string'
                             ],
-                            'array' => [
-                                'type' => 'string'
-                            ]
+                            'integer' => [
+                                'type' => 'integer'
+                            ],
                         ]
                     ]
                 ]
