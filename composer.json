@@ -1,12 +1,16 @@
 {
   "name": "loaf/settings",
-  "description": "Webhub Loaf Settings Plugin",
+  "description": "Loaf Settings Plugin",
   "type": "library",
   "license": "MIT",
   "authors": [
     {
       "name": "Tom Lankhorst",
       "email": "tomlankhorst@webhub.nl"
+    },
+    {
+      "name": "Nick Schot",
+      "email": "nickschot@webhub.nl"
     }
   ],
   "repositories": [
@@ -24,22 +28,22 @@
     "laravel/framework": "5.5.*"
   },
   "require-dev": {
-    "orchestra/testbench": "~3.5",
     "loaf/base": "dev-master",
     "loaf/admin": "dev-master",
+    "orchestra/testbench": "~3.5",
     "phpunit/phpunit": "^6.5"
   },
   "autoload": {
     "psr-4": {
       "Loaf\\Settings\\": "src",
-      "Loaf\\Settings\\Database\\Seeds": "database/seeds"
+      "Loaf\\Settings\\Database\\Seeds\\": "database/seeds"
     }
   },
   "autoload-dev": {
     "psr-4": {
       "Loaf\\Settings\\Tests\\": "tests",
-      "Loaf\\Base\\Tests\\": "vendor/loaf/base/tests/",
-      "Loaf\\Admin\\Tests\\": "vendor/loaf/admin/tests/"
+      "Loaf\\Base\\Tests\\": "vendor/loaf/base/tests",
+      "Loaf\\Admin\\Tests\\": "vendor/loaf/admin/tests"
     }
   },
   "extra": {
