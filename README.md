@@ -1,6 +1,8 @@
 Loaf Settings
 ======
 
+![Build Status](https://build.webhub.nl/buildStatus/icon?job=loaf-settings)
+
 User-customizable settings for Loaf. 
 
 Usage
