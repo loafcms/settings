@@ -128,7 +128,19 @@ class ManagerTest extends TestCase
     public function testThrowNonExistentField()
     {
         $this->expectException( SettingsException::class );
-        $this->manager->getField('wrong.path.field');
+        $this->manager->getField('section.group.nonexistent');
+    }
+
+    public function testThrowInvalidGroup()
+    {
+        $this->expectException( SettingsException::class );
+        $this->manager->getSection('invalid.path.to.group');
+    }
+
+    public function testThrowNonExistentGroup()
+    {
+        $this->expectException( SettingsException::class );
+        $this->manager->getSection('section.nonexistent');
     }
 
     public function testThrowNotParsed()
@@ -189,6 +201,13 @@ class ManagerTest extends TestCase
         );
     }
 
+    public function testGetSettingType()
+    {
+        $field = $this->manager->getField( 'section.group.boolean' );
+        $type = $this->manager->getSettingType( $field );
+        $this->assertEquals($field->type, $type->getType());
+    }
+
     public function testGetGroup()
     {
         $path = 'section.group';
@@ -214,6 +233,7 @@ class ManagerTest extends TestCase
                     'group' => [
                         'fields' => [
                             'test-field' => [
+                                'label' => 'Some test type',
                                 'type' => 'test-type'
                             ]
                         ]
@@ -228,6 +248,12 @@ class ManagerTest extends TestCase
             $value,
             $this->manager->get("section.group.test-field")
         );
+    }
+
+    public function testRegisterInvalidClass()
+    {
+        $this->expectException( SettingsException::class );
+        $this->manager->registerType('invalid', StubClass::class );
     }
 
     public function testCache()
@@ -318,25 +344,9 @@ class ManagerTest extends TestCase
 
     protected function getConfig() : array
     {
-        return [
-            'section' => [
-                'groups' => [
-                    'group' => [
-                        'fields' => [
-                            'boolean' => [
-                                'type' => 'boolean'
-                            ],
-                            'string' => [
-                                'type' => 'string'
-                            ],
-                            'integer' => [
-                                'type' => 'integer'
-                            ],
-                        ]
-                    ]
-                ]
-            ]
-        ];
+        return $this->getTestCaseSettingsConfig();
     }
 
 }
+
+class StubClass { }
