@@ -64,6 +64,58 @@ abstract class BaseSettingType implements SettingType
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getFormName($key = '_value'): string
+    {
+        $field_path = $this->field->getPath();
+        $name = $field_path;
+
+        if( $key )
+            $name .= ".$key";
+
+        return 'settings['.str_replace('.', '][', $name).']';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getValidationKey($key = '_value') : string
+    {
+        return $this->getFormKey($key);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getLabel($key = '_value'): string
+    {
+        return $this->field->getLabel();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getId($key = '_value'): string
+    {
+        return $this->getValidationKey($key);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFormKey($key = null): string
+    {
+        $field_path = $this->field->getPath();
+        $name = $field_path;
+
+        if( $key )
+            $name .= ".$key";
+
+        return "settings.$name";
+    }
+
+    /**
      * @return SettingModel return an instantiated settings model
      */
     protected abstract function makeModel() : SettingModel;
@@ -74,14 +126,27 @@ abstract class BaseSettingType implements SettingType
     public function getEditView()
     {
         return view('loaf/settings::types/base/edit', [
-            'field' => $this->getField(),
-            'model' => $this->getModel()
+            'type' => $this
         ]);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getEditValidationRules() : array
     {
-        return [];
+        return [
+            '_value' => []
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function parseEditFormData( array $data ) : array
+    {
+        // Always save the data but set it to null if not supplied
+        return [ true, $data['_value'] ?? null ];
     }
 
 }
