@@ -10,7 +10,7 @@ $factory->define(\Loaf\Settings\Setting::class, function (Faker\Generator $faker
 
     $attributes['path'] = implode('.', $path);
 
-    $type = $faker->randomElement(['string', 'integer', 'array']);
+    $type = $faker->randomElement(['string', 'integer', 'boolean']);
 
     $attributes['type'] = $type;
 
@@ -21,8 +21,8 @@ $factory->define(\Loaf\Settings\Setting::class, function (Faker\Generator $faker
         case 'integer':
             $value = $faker->numberBetween;
             break;
-        case 'array':
-            $value = $faker->words;
+        case 'boolean':
+            $value = $faker->boolean;
     }
 
     $attributes['value'] = $value;
