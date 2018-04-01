@@ -24,9 +24,8 @@ class Group extends BaseConfigElement
 
     public function getConfigValidationRules()
     {
-        return [
+        return parent::getConfigValidationRules() + [
             'label' => 'nullable|string',
-            'order' => 'nullable|integer',
             'fields' => 'nullable|array',
         ];
     }

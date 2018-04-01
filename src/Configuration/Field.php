@@ -16,11 +16,10 @@ class Field extends BaseConfigElement {
 
     public function getConfigValidationRules()
     {
-        return [
+        return parent::getConfigValidationRules() + [
             'type' => 'required|string',
             'label' => 'required|string',
             'description' => 'nullable|string',
-            'order' => 'nullable|integer'
         ];
     }
 

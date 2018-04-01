@@ -24,6 +24,8 @@ abstract class BaseConfigElement extends Configurable implements ConfigElement
 
     public function __construct(Factory $validation_factory, array $config = null, string $key = null, $parent = null)
     {
+        $config['key'] = $key;
+
         parent::__construct($validation_factory, $config);
 
         $this->parent = $parent;
@@ -31,25 +33,22 @@ abstract class BaseConfigElement extends Configurable implements ConfigElement
 
         foreach( $this->map as $key => $model ) {
 
-            if( isset( $config[ $model ] ) )
-                $this->$model = (new $model( $validation_factory, $config[ $model ], $key, $this ));
+            if( isset( $this->config[ $model ] ) )
+                $this->$model = (new $model( $validation_factory, $this->config[ $model ], $key, $this ));
 
             $models = str_plural( $key );
 
-            if( isset( $config[ $models ] ) ){
+            if( isset( $this->config[ $models ] ) ){
                 $instances = collect();
-                foreach( $config[ $models ] as $model_key => $model_config )
+                foreach( $this->config[ $models ] as $model_key => $model_config )
                     $instances[ $model_key ] = (new $model( $validation_factory, $model_config, $model_key, $this ));
-                $config[ $models ] = $instances;
+                $this->config[ $models ] = $instances;
             }
 
         }
 
-        // Update config
-        $this->config = $config;
-
         foreach( $this->getPublicTypes() as $type )
-            $this->$type = $config[ $type ] ?? null;
+            $this->$type = $this->config[ $type ] ?? null;
     }
 
     public function getLabel(): string
@@ -65,9 +64,39 @@ abstract class BaseConfigElement extends Configurable implements ConfigElement
         return $this->description ?? null;
     }
 
+    /**
+     * Get the identifying key of the element
+     *
+     * @return null|string
+     */
     public function getKey(): ?string
     {
         return $this->key;
+    }
+
+    /**
+     * Default configuration values
+     *
+     * @return array
+     */
+    public function getDefaults(): array
+    {
+        return [
+            'order' => 0
+        ];
+    }
+
+    /**
+     * Validation rules for configuration
+     *
+     * @return array
+     */
+    public function getConfigValidationRules()
+    {
+        return [
+            'order' => 'nullable|integer',
+            'key' => 'required'
+        ];
     }
 
     /**

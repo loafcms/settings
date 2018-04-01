@@ -22,9 +22,8 @@ class Section extends BaseConfigElement
 
     public function getConfigValidationRules()
     {
-        return [
+        return parent::getConfigValidationRules() + [
             'label' => 'nullable|string',
-            'order' => 'nullable|integer',
             'groups' => 'nullable|array',
         ];
     }

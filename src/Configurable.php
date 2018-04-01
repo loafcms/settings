@@ -17,11 +17,6 @@ abstract class Configurable {
 
     abstract protected function getConfigValidationRules();
 
-    public static function make( array $config )
-    {
-        return app()->makeWith( static::class, compact('config' ) );
-    }
-
     protected function getPublicTypes() : array
     {
         return collect( ( new \ReflectionClass( $this ) )
@@ -38,23 +33,24 @@ abstract class Configurable {
     public function __construct( Factory $validation_factory, array $config = null )
     {
         $config = array_merge( $this->getDefaults(), $config );
-
-        $validator = $validation_factory->make( $config, $this->getConfigValidationRules() );
-
-        if( $validator->invalid() )
-            throw new SettingsException("Invalid element config");
-
         $this->config = $config;
 
-        foreach( $this->getPublicTypes() as $type )
-            $this->$type = $config[ $type ] ?? null;
+        // Validate the input
+        $validator = $validation_factory->make( $config, $this->getConfigValidationRules() );
+        if( $validator->fails() )
+            throw new SettingsException("Invalid element config");
+
+        // Set all values on the public properties of the class
+        foreach( $this->getPublicTypes() as $type ){
+            if( isset($config[ $type ]) ){
+                $this->$type = $config[ $type ];
+                unset( $config[ $type ] );
+            }
+        }
     }
 
     public function __get( $key )
     {
-        if( in_array( $key, $this->getPublicTypes() ) )
-            return $this->$key;
-
         return $this->config[ $key ] ?? null;
     }
 
