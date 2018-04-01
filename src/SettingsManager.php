@@ -135,7 +135,7 @@ class SettingsManager implements SettingsManagerContract
      */
     public function registerType( string $type_name, string $type_class )
     {
-        if( !in_array(SettingType::class, class_implements( $type_class ) ) )
+        if( !class_exists($type_class) || !in_array(SettingType::class, class_implements( $type_class ) ) )
             throw new SettingsException("$type_class is no instance of ".SettingType::class);
 
         $this->type_map[ $type_name ] = $type_class;
@@ -200,13 +200,10 @@ class SettingsManager implements SettingsManagerContract
 
         foreach( $this->config_queue as list( $type, $config ) ) {
 
-            if( $type == 'file' ) {
+            if( $type == 'file' )
                 $config = require $config;
-                $type = 'array';
-            }
 
-            if( $type !== 'array' )
-                throw new SettingsException("Unsupported config type $type");
+            // otherwise, it's an array
 
             foreach( $config as $section => $section_config ) {
 
@@ -384,10 +381,7 @@ class SettingsManager implements SettingsManagerContract
         if( !$cache )
             return false;
 
-        if( !is_array($cache) )
-            return false;
-
-        if( !array_key_exists('fingerprint', $cache) || !array_key_exists('sections', $cache) )
+        if( !is_array($cache) || !array_key_exists('fingerprint', $cache) || !array_key_exists('sections', $cache) )
             return false;
 
         if( $cache['fingerprint'] !== $this->getConfigFingerprint() )
