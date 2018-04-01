@@ -9,4 +9,5 @@ Route::group([
 
     Route::get('settings/{section}/edit', 'SettingsController@editSection')->name('settings.editSection');
     Route::post('settings/{section}', 'SettingsController@updateSection')->name('settings.updateSection');
+
 });
