@@ -2,6 +2,7 @@ Loaf Settings
 ======
 
 ![Build Status](https://build.webhub.nl/buildStatus/icon?job=loaf-settings)
+![StyleCI](https://styleci.io/repos/127656539/shield?branch=master)
 
 User-customizable settings for Loaf. 
 
