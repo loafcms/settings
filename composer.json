@@ -32,7 +32,7 @@
   "autoload": {
     "psr-4": {
       "Loaf\\Settings\\": "src",
-      "Loaf\\Settings\\Database\\": "database"
+      "Loaf\\Settings\\Database\\Seeds": "database/seeds"
     }
   },
   "autoload-dev": {
