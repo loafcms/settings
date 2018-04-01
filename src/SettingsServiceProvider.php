@@ -14,7 +14,6 @@ use Loaf\Base\Contracts\Menu\Builder;
 use Loaf\Base\Contracts\Settings\SettingsManager as SettingsManagerContract;
 
 use Loaf\Settings\Configuration\Section;
-use Loaf\Settings\Models\BooleanSetting;
 use Loaf\Settings\Policies\SectionPolicy;
 
 use Gate;
@@ -74,6 +73,7 @@ class SettingsServiceProvider extends ServiceProvider {
             ));
         });
 
+        // Now hooking into SettingsManager because otherwise it hooks twice
         $this->app->resolving( SettingsManager::class, function( SettingsManager $manager ){
             $manager->registerType('string', StringSettingType::class);
             $manager->registerType('integer', IntegerSettingType::class);
