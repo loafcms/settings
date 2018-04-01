@@ -30,15 +30,8 @@ class Setting extends Model
         parent::boot();
 
         static::addGlobalScope('scope', function (Builder $builder) {
-            $scopes = self::getSettingsScopes();
-
-            // Find all non-null scopes
-            $builder->whereIn('scope', $scopes->filter() );
-
-            // Find the null scope if exists
-            if( $scopes->contains( null ) )
-                $builder->orWhere( 'scope', null );
-
+            $scopes = self::getSettingsScopes()->filter();
+            $builder->whereIn('scope', $scopes );
             $builder->orderBy('scope', 'desc');
         });
     }
