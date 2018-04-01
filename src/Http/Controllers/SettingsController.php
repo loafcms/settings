@@ -2,32 +2,37 @@
 
 namespace Loaf\Settings\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Loaf\Admin\Http\Controllers\Controller;
 use Loaf\Base\Contracts\Menu\AdminMenu;
-use Loaf\Base\Contracts\Settings\SettingsManager;
+use Loaf\Settings\Configuration\Group;
 use Loaf\Settings\Configuration\Section;
 use Loaf\Settings\Http\Resources\UpdateSectionRequest;
 use Loaf\Settings\SettingsException;
 
-use Session;
+use Loaf\Settings\SettingsManager;
+use Loaf\Base\Contracts\Settings\SettingsManager as SettingsManagerContract;
+use Loaf\Settings\SettingsParseException;
+
+use Log;
 
 class SettingsController extends Controller
 {
     /**
      * @var SettingsManager
      */
-    protected $settings;
+    protected $settings_manager;
 
     /**
      * @var Section
      */
     protected $section;
 
-    public function __construct( AdminMenu $menu_manager, SettingsManager $settings )
+    public function __construct( AdminMenu $menu_manager, SettingsManagerContract $settings )
     {
         parent::__construct($menu_manager);
 
-        $this->settings = $settings;
+        $this->settings_manager = $settings;
     }
 
     /**
@@ -56,9 +61,42 @@ class SettingsController extends Controller
     {
         $this->findOrFailSection( $section );
 
-        $this->flashStatus('Updating group... not implemented yet', false, 'warning');
+        $this->updateSectionSettings( $request, $this->section );
+
+        $this->flashStatus('Settings saved');
 
         return $this->redirectToSectionEdit();
+    }
+
+    protected function updateSectionSettings( Request $request, Section $section )
+    {
+        foreach( $section->groups as $group )
+            $this->updateGroupSettings( $request, $group );
+    }
+
+    protected function updateGroupSettings( Request $request, Group $group )
+    {
+        foreach( $group->fields as $field ) {
+            $type = $this->settings_manager->getSettingType( $field );
+            $field_path = $field->getPath();
+
+            $form_data = $request->input( $type->getFormKey() ) ?? [];
+
+            try {
+                list( $save, $parsed ) = $type->parseEditFormData( $form_data );
+            } catch ( SettingsParseException $e ) {
+                Log::warning("Error parsing $field_path, got: ".$e->getMessage());
+                continue;
+            }
+
+            if(!$save)
+                continue;
+
+            $this->settings_manager->set(
+                $type->getField()->getPath(),
+                $parsed
+            );
+        }
     }
 
     /**
@@ -71,7 +109,7 @@ class SettingsController extends Controller
     protected function findOrFailSection( string $section, int $abort_code = 404 )
     {
         try {
-            return $this->section = $this->settings->getSection( $section );
+            return $this->section = $this->settings_manager->getSection( $section );
         } catch (SettingsException $e) {
             abort( $abort_code );
         }
