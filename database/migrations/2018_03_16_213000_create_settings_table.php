@@ -12,7 +12,7 @@ class CreateSettingsTable extends Migration
             $table->increments('id');
 
             $table->string('path', 255);
-            $table->string('scope', 255)->default( \Loaf\Settings\SettingsManager::getDefaultScope() );
+            $table->string('scope', 255)->default(\Loaf\Settings\SettingsManager::getDefaultScope());
 
             $table->timestamps();
 

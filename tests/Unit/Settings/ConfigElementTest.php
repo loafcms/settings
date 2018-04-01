@@ -10,27 +10,27 @@ class ConfigElementTest extends TestCase
 {
     public function testConstructSectionElement()
     {
-        $section = app()->makeWith( Section::class, [
+        $section = app()->makeWith(Section::class, [
             'config' => $this->getConfig()['general'],
-            'key' => 'general'
+            'key'    => 'general',
         ]);
 
-        $this->assertEquals( 'general', $section->getKey() );
-        $this->assertEquals( 'website', $section->groups->first()->getKey() );
-        $this->assertEquals( 'website_name', $section->groups->first()->fields->first()->getKey() );
+        $this->assertEquals('general', $section->getKey());
+        $this->assertEquals('website', $section->groups->first()->getKey());
+        $this->assertEquals('website_name', $section->groups->first()->fields->first()->getKey());
     }
 
     public function testInvalidConfig()
     {
-        $this->expectException( SettingsException::class );
+        $this->expectException(SettingsException::class);
 
         $config = $this->getConfig()['general'];
 
-        unset( $config['groups']['website']['fields']['website_name']['label'] );
+        unset($config['groups']['website']['fields']['website_name']['label']);
 
-        app()->makeWith( Section::class, [
+        app()->makeWith(Section::class, [
             'config' => $config,
-            'key' => 'general'
+            'key'    => 'general',
         ]);
     }
 
@@ -38,24 +38,23 @@ class ConfigElementTest extends TestCase
     {
         return [
             'general' => [
-                'label' => 'General',
-                'order' => 100,
+                'label'  => 'General',
+                'order'  => 100,
                 'groups' => [
                     'website' => [
-                        'label' => 'Website',
-                        'order' => 10,
+                        'label'  => 'Website',
+                        'order'  => 10,
                         'fields' => [
                             'website_name' => [
-                                'label' => 'Website Name',
+                                'label'   => 'Website Name',
                                 'comment' => 'This is the name shown to the user',
-                                'type' => 'string',
-                                'order' => 10
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                'type'    => 'string',
+                                'order'   => 10,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
-
 }

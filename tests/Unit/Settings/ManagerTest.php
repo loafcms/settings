@@ -4,22 +4,16 @@ namespace Loaf\Settings\Tests\Unit\Settings;
 
 use Illuminate\Cache\ArrayStore;
 use Illuminate\Config\Repository;
-
+use Illuminate\Contracts\Cache\Repository as CacheRepositoryContract;
 use Illuminate\Contracts\Logging\Log as LogContract;
 use Illuminate\Contracts\Validation\Factory as ValidationFactoryContract;
-use Illuminate\Contracts\Cache\Repository as CacheRepositoryContract;
-
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
 use Loaf\Base\Contracts\Settings\ConfigElement;
 use Loaf\Base\Contracts\Settings\SettingsException;
 use Loaf\Base\Contracts\Settings\SettingsManager;
-
 use Loaf\Settings\Configuration\Field;
 use Loaf\Settings\Configuration\Group;
 use Loaf\Settings\Configuration\Section;
-
-use Loaf\Settings\Models\BooleanSetting;
 use Loaf\Settings\Tests\TestCase;
 use Loaf\Settings\Types\BooleanSettingType;
 use Loaf\Settings\Types\IntegerSettingType;
@@ -49,7 +43,7 @@ class ManagerTest extends TestCase
         $this->manager->registerType('boolean', BooleanSettingType::class);
 
         $this->manager->parseConfig();
-        $this->reflection = new \ReflectionClass( \Loaf\Settings\SettingsManager::class );
+        $this->reflection = new \ReflectionClass(\Loaf\Settings\SettingsManager::class);
     }
 
     public function testSetGet()
@@ -57,21 +51,21 @@ class ManagerTest extends TestCase
         $path = 'section.group.string';
 
         $this->assertNull(
-            $this->manager->get( $path )
+            $this->manager->get($path)
         );
 
-        $this->manager->set( $path, $value = 'value' );
+        $this->manager->set($path, $value = 'value');
 
         $this->assertSame(
             $value,
-            $this->manager->get( $path )
+            $this->manager->get($path)
         );
 
-        $this->manager->set( $path, $value = 'newvalue' );
+        $this->manager->set($path, $value = 'newvalue');
 
         $this->assertSame(
             $value,
-            $this->manager->get( $path )
+            $this->manager->get($path)
         );
     }
 
@@ -80,14 +74,14 @@ class ManagerTest extends TestCase
         $path = 'section.group.boolean';
 
         $this->assertNull(
-            $this->manager->get( $path )
+            $this->manager->get($path)
         );
 
-        $this->manager->set( $path, $value = false);
+        $this->manager->set($path, $value = false);
 
         $this->assertSame(
             false,
-            $this->manager->get( $path )
+            $this->manager->get($path)
         );
     }
 
@@ -98,7 +92,7 @@ class ManagerTest extends TestCase
 
         $this->assertSame(
             $default,
-            $this->manager->get( $path, $default )
+            $this->manager->get($path, $default)
         );
     }
 
@@ -106,40 +100,40 @@ class ManagerTest extends TestCase
     {
         $path = 'section.group.string';
 
-        $this->manager->set( $path, $value = 'value' );
+        $this->manager->set($path, $value = 'value');
 
         $this->assertNotNull(
-            $this->manager->get( $path )
+            $this->manager->get($path)
         );
 
-        $this->manager->forget( $path );
+        $this->manager->forget($path);
 
         $this->assertNull(
-            $this->manager->get( $path )
+            $this->manager->get($path)
         );
     }
 
     public function testThrowInvalidPath()
     {
-        $this->expectException( SettingsException::class );
+        $this->expectException(SettingsException::class);
         $this->manager->get('wrong.path');
     }
 
     public function testThrowNonExistentField()
     {
-        $this->expectException( SettingsException::class );
+        $this->expectException(SettingsException::class);
         $this->manager->getField('section.group.nonexistent');
     }
 
     public function testThrowInvalidGroup()
     {
-        $this->expectException( SettingsException::class );
+        $this->expectException(SettingsException::class);
         $this->manager->getSection('invalid.path.to.group');
     }
 
     public function testThrowNonExistentGroup()
     {
-        $this->expectException( SettingsException::class );
+        $this->expectException(SettingsException::class);
         $this->manager->getSection('section.nonexistent');
     }
 
@@ -148,7 +142,7 @@ class ManagerTest extends TestCase
         $manager = $this->getManager();
 
         // Expect an exception when not parsed
-        $this->expectException( SettingsException::class );
+        $this->expectException(SettingsException::class);
         $manager->getField('section.group.boolean');
 
         // Parse the config and expect an element
@@ -156,9 +150,8 @@ class ManagerTest extends TestCase
 
         $this->assertEquals(
             Field::class,
-            get_class( $manager->getField('section.group.boolean') )
+            get_class($manager->getField('section.group.boolean'))
         );
-
     }
 
     public function testGetSections()
@@ -173,11 +166,11 @@ class ManagerTest extends TestCase
         $section = $sections->get('section');
 
         $this->assertTrue(
-            get_class( $section ) == Section::class
+            get_class($section) == Section::class
         );
 
         $this->assertTrue(
-            in_array( ConfigElement::class, class_implements( $section ) )
+            in_array(ConfigElement::class, class_implements($section))
         );
     }
 
@@ -185,14 +178,14 @@ class ManagerTest extends TestCase
     {
         $path = 'section.group.boolean';
 
-        $field = $this->manager->getField( $path );
+        $field = $this->manager->getField($path);
 
         $this->assertTrue(
-            get_class( $field ) == Field::class
+            get_class($field) == Field::class
         );
 
         $this->assertTrue(
-            in_array( ConfigElement::class, class_implements( $field ) )
+            in_array(ConfigElement::class, class_implements($field))
         );
 
         $this->assertEquals(
@@ -203,8 +196,8 @@ class ManagerTest extends TestCase
 
     public function testGetSettingType()
     {
-        $field = $this->manager->getField( 'section.group.boolean' );
-        $type = $this->manager->getSettingType( $field );
+        $field = $this->manager->getField('section.group.boolean');
+        $type = $this->manager->getSettingType($field);
         $this->assertEquals($field->type, $type->getType());
     }
 
@@ -212,20 +205,20 @@ class ManagerTest extends TestCase
     {
         $path = 'section.group';
 
-        $group = $this->manager->getGroup( $path );
+        $group = $this->manager->getGroup($path);
 
         $this->assertTrue(
-            get_class( $group ) == Group::class
+            get_class($group) == Group::class
         );
 
         $this->assertTrue(
-            in_array( ConfigElement::class, class_implements( $group ) )
+            in_array(ConfigElement::class, class_implements($group))
         );
     }
 
     public function testRegisterType()
     {
-        $this->manager->registerType("test-type", StringSettingType::class);
+        $this->manager->registerType('test-type', StringSettingType::class);
 
         $this->manager->mergeConfig([
             'section' => [
@@ -234,41 +227,41 @@ class ManagerTest extends TestCase
                         'fields' => [
                             'test-field' => [
                                 'label' => 'Some test type',
-                                'type' => 'test-type'
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                'type'  => 'test-type',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ], true);
 
-        $this->manager->set('section.group.test-field', $value = "test-value");
+        $this->manager->set('section.group.test-field', $value = 'test-value');
 
         $this->assertEquals(
             $value,
-            $this->manager->get("section.group.test-field")
+            $this->manager->get('section.group.test-field')
         );
     }
 
     public function testRegisterInvalidClass()
     {
-        $this->expectException( SettingsException::class );
-        $this->manager->registerType('invalid', StubClass::class );
+        $this->expectException(SettingsException::class);
+        $this->manager->registerType('invalid', StubClass::class);
     }
 
     public function testCache()
     {
         // Test with a new repository with an array backend
-        $cache = new \Illuminate\Cache\Repository( new ArrayStore() );
+        $cache = new \Illuminate\Cache\Repository(new ArrayStore());
 
         $key = $this->invokeManagerMethod('getCacheKey', ['config']);
 
-        $this->assertFalse( $cache->has($key) );
+        $this->assertFalse($cache->has($key));
 
-        $manager = $this->getManager( $cache );
+        $manager = $this->getManager($cache);
         $manager->parseConfig();
 
-        $this->assertTrue( $cache->has($key) );
+        $this->assertTrue($cache->has($key));
     }
 
     public function testValidCache()
@@ -299,7 +292,7 @@ class ManagerTest extends TestCase
         $fingerprint = $this->invokeManagerMethod('getConfigFingerprint');
 
         // Force a merge config
-        $this->manager->mergeConfig( $this->getMergeConfig(), true );
+        $this->manager->mergeConfig($this->getMergeConfig(), true);
 
         $this->assertNotEquals(
             $this->invokeManagerMethod('getConfigFingerprint'),
@@ -307,21 +300,22 @@ class ManagerTest extends TestCase
         );
     }
 
-    protected function getManager( CacheRepositoryContract $cache = null ) : SettingsManager
+    protected function getManager(CacheRepositoryContract $cache = null) : SettingsManager
     {
         return new \Loaf\Settings\SettingsManager(
-            app( ValidationFactoryContract::class ),
-            new Repository( $this->getConfig() ),
-            $cache ?? app( CacheRepositoryContract::class ),
-            app( LogContract::class )
+            app(ValidationFactoryContract::class),
+            new Repository($this->getConfig()),
+            $cache ?? app(CacheRepositoryContract::class),
+            app(LogContract::class)
         );
     }
 
-    protected function invokeManagerMethod( string $method, array $args = [] )
+    protected function invokeManagerMethod(string $method, array $args = [])
     {
-        $method = $this->reflection->getMethod( $method );
+        $method = $this->reflection->getMethod($method);
         $method->setAccessible(true);
-        return $method->invokeArgs( $this->manager, $args );
+
+        return $method->invokeArgs($this->manager, $args);
     }
 
     protected function getMergeConfig() : array
@@ -333,12 +327,12 @@ class ManagerTest extends TestCase
                         'fields' => [
                             'extra_field' => [
                                 'label' => 'Website Name',
-                                'type' => 'string'
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                'type'  => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -346,7 +340,8 @@ class ManagerTest extends TestCase
     {
         return $this->getTestCaseSettingsConfig();
     }
-
 }
 
-class StubClass { }
+class StubClass
+{
+}

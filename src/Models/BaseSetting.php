@@ -5,11 +5,9 @@ namespace Loaf\Settings\Models;
 use Loaf\Settings\Configuration\Field as FieldConfig;
 
 /**
- * Class BaseSetting
+ * Class BaseSetting.
  *
  * Database model for storing a setting
- *
- * @package Loaf\Settings\Models
  */
 abstract class BaseSetting implements SettingModel
 {
@@ -19,25 +17,25 @@ abstract class BaseSetting implements SettingModel
     protected $field;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function __construct( FieldConfig $field = null )
+    public function __construct(FieldConfig $field = null)
     {
         $this->field = $field;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function serialize( $value )
+    public function serialize($value)
     {
         return $value;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function deserialize( $value )
+    public function deserialize($value)
     {
         return $value;
     }

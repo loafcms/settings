@@ -3,8 +3,8 @@
 namespace Loaf\Settings\Tests;
 
 use Loaf\Admin\Tests\TestCase as BaseTestCase;
-use Loaf\Settings\SettingsManager;
 use Loaf\Settings\SettingsFacade;
+use Loaf\Settings\SettingsManager;
 use Loaf\Settings\SettingsServiceProvider;
 
 abstract class TestCase extends BaseTestCase
@@ -16,15 +16,17 @@ abstract class TestCase extends BaseTestCase
         $this->withFactories(realpath(dirname(__DIR__).'/database/factories'));
     }
 
-    protected function getPackageProviders($app){
-        return array_merge( parent::getPackageProviders($app), [
+    protected function getPackageProviders($app)
+    {
+        return array_merge(parent::getPackageProviders($app), [
             SettingsServiceProvider::class,
-        ] );
+        ]);
     }
 
-    protected function getPackageAliases($app){
-        return array_merge( parent::getPackageAliases($app), [
-            'Settings' => SettingsFacade::class
+    protected function getPackageAliases($app)
+    {
+        return array_merge(parent::getPackageAliases($app), [
+            'Settings' => SettingsFacade::class,
         ]);
     }
 
@@ -32,7 +34,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::getEnvironmentSetUp($app);
 
-        $app->resolving( SettingsManager::class, function( SettingsManager $manager) {
+        $app->resolving(SettingsManager::class, function (SettingsManager $manager) {
             $manager->mergeConfig($this->getTestCaseSettingsConfig(), true);
         });
     }
@@ -43,25 +45,24 @@ abstract class TestCase extends BaseTestCase
             'section' => [
                 'groups' => [
                     'group' => [
-                        'label' => 'a prototypical group',
+                        'label'  => 'a prototypical group',
                         'fields' => [
                             'boolean' => [
                                 'label' => 'a two state switch',
-                                'type' => 'boolean'
+                                'type'  => 'boolean',
                             ],
                             'string' => [
                                 'label' => 'expressed in characters',
-                                'type' => 'string',
+                                'type'  => 'string',
                             ],
                             'integer' => [
                                 'label' => 'something countable',
-                                'type' => 'integer'
+                                'type'  => 'integer',
                             ],
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
-
 }

@@ -8,15 +8,15 @@ use Loaf\Settings\Models\SettingModel;
 class BooleanSettingType extends BaseSettingType
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function makeModel(): SettingModel
     {
-        return new BooleanSetting( $this->field );
+        return new BooleanSetting($this->field);
     }
 
     /**
-     * Get the description for a checkbox
+     * Get the description for a checkbox.
      *
      * @return string
      */
@@ -26,32 +26,32 @@ class BooleanSettingType extends BaseSettingType
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getEditView()
     {
         return view('loaf/settings::types/boolean/edit', [
-            'type' => $this
+            'type' => $this,
         ]);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getEditValidationRules(): array
     {
         return [
-            '_value' => 'nullable|boolean'
+            '_value' => 'nullable|boolean',
         ];
     }
 
     /**
-     * Make a boolean from the from data
+     * Make a boolean from the from data.
      *
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function parseEditFormData(array $data) : array
     {
-        return [ true, isset( $data['_value'] ) ? true : false ];
+        return [true, isset($data['_value']) ? true : false];
     }
 }

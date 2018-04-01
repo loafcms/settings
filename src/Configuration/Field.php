@@ -2,8 +2,8 @@
 
 namespace Loaf\Settings\Configuration;
 
-class Field extends BaseConfigElement {
-
+class Field extends BaseConfigElement
+{
     /**
      * @var string
      */
@@ -17,8 +17,8 @@ class Field extends BaseConfigElement {
     public function getConfigValidationRules()
     {
         return parent::getConfigValidationRules() + [
-            'type' => 'required|string',
-            'label' => 'required|string',
+            'type'        => 'required|string',
+            'label'       => 'required|string',
             'description' => 'nullable|string',
         ];
     }
@@ -28,9 +28,8 @@ class Field extends BaseConfigElement {
         return $this->parent->getPath().'.'.$this->key;
     }
 
-    public function get( $default = null )
+    public function get($default = null)
     {
-        return $this->getManager()->get( $this->getPath(), $default );
+        return $this->getManager()->get($this->getPath(), $default);
     }
-
 }

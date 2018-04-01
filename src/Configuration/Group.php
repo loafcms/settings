@@ -4,7 +4,6 @@ namespace Loaf\Settings\Configuration;
 
 class Group extends BaseConfigElement
 {
-
     /**
      * @var Section
      */
@@ -14,7 +13,7 @@ class Group extends BaseConfigElement
      * @var array Map config key to model
      */
     protected $map = [
-        'field' => Field::class
+        'field' => Field::class,
     ];
 
     /**
@@ -25,7 +24,7 @@ class Group extends BaseConfigElement
     public function getConfigValidationRules()
     {
         return parent::getConfigValidationRules() + [
-            'label' => 'nullable|string',
+            'label'  => 'nullable|string',
             'fields' => 'nullable|array',
         ];
     }
@@ -34,5 +33,4 @@ class Group extends BaseConfigElement
     {
         return $this->parent->getPath().'.'.$this->key;
     }
-
 }

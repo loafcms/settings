@@ -26,7 +26,7 @@ class UpdateSectionRequest extends FormRequest
      *
      * @param SettingsManager $settings
      */
-    public function __construct( SettingsManager $settings )
+    public function __construct(SettingsManager $settings)
     {
         parent::__construct();
 
@@ -34,27 +34,27 @@ class UpdateSectionRequest extends FormRequest
     }
 
     /**
-     * Validate whether the user can update the setting
+     * Validate whether the user can update the setting.
      *
      * @return bool authorized
      */
     public function authorize()
     {
-        return $this->user()->can( 'update', $this->getSection() );
+        return $this->user()->can('update', $this->getSection());
     }
 
     /**
-     * Form validation rules for all fields in the section
+     * Form validation rules for all fields in the section.
      *
      * @return array
      */
     public function rules()
     {
-        return $this->getSectionRules( $this->getSection() );
+        return $this->getSectionRules($this->getSection());
     }
 
     /**
-     * Get the messages for form
+     * Get the messages for form.
      *
      * TODO: Implement messages
      *
@@ -66,36 +66,38 @@ class UpdateSectionRequest extends FormRequest
     }
 
     /**
-     * Form validation rules for a specific section
+     * Form validation rules for a specific section.
      *
      * @param Section $section
+     *
      * @return array
      */
-    protected function getSectionRules( Section $section )
+    protected function getSectionRules(Section $section)
     {
         $rules = [];
 
-        foreach( $this->getSection()->groups as $group )
-            $rules = array_merge( $rules, $this->getGroupRules( $group ) );
+        foreach ($this->getSection()->groups as $group) {
+            $rules = array_merge($rules, $this->getGroupRules($group));
+        }
 
         return $rules;
     }
 
     /**
-     * Form validation rules for a specific group
+     * Form validation rules for a specific group.
      *
      * @param Group $group
+     *
      * @return array
      */
-    protected function getGroupRules( Group $group )
+    protected function getGroupRules(Group $group)
     {
         $rules = [];
 
-        foreach( $group->fields as $field )
-        {
-            $type = $this->settings_manager->getSettingType( $field );
-            foreach( $type->getEditValidationRules() as $key => $rule ){
-                $rules[ $type->getValidationKey($key) ] = $rule;
+        foreach ($group->fields as $field) {
+            $type = $this->settings_manager->getSettingType($field);
+            foreach ($type->getEditValidationRules() as $key => $rule) {
+                $rules[$type->getValidationKey($key)] = $rule;
             }
         }
 
@@ -103,19 +105,20 @@ class UpdateSectionRequest extends FormRequest
     }
 
     /**
-     * Get the section for the current request
+     * Get the section for the current request.
      *
      * @return Section
      */
     protected function getSection()
     {
-        if( $this->section_model )
+        if ($this->section_model) {
             return $this->section_model;
+        }
 
         try {
-            return $this->section_model = $this->settings_manager->getSection( $this->section );
+            return $this->section_model = $this->settings_manager->getSection($this->section);
         } catch (SettingsException $e) {
-            throw new NotFoundHttpException( $e->getMessage(), $e->getCode(), $e );
+            throw new NotFoundHttpException($e->getMessage(), $e->getCode(), $e);
         }
     }
 }

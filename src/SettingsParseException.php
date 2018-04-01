@@ -2,4 +2,6 @@
 
 namespace Loaf\Settings;
 
-class SettingsParseException extends SettingsException { }
+class SettingsParseException extends SettingsException
+{
+}

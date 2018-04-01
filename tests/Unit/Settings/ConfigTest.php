@@ -4,7 +4,6 @@ namespace Loaf\Settings\Tests\Unit\Settings;
 
 use Illuminate\Config\Repository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
 use Loaf\Base\Contracts\Settings\SettingsException;
 use Loaf\Base\Contracts\Settings\SettingsManager;
 use Loaf\Settings\Tests\TestCase;
@@ -27,12 +26,12 @@ class ConfigTest extends TestCase
     {
         parent::setUp();
         $this->repository = $this->getRepository();
-        $this->manager = $this->getManager( $this->repository );
+        $this->manager = $this->getManager($this->repository);
     }
 
     public function testMergeConfig()
     {
-        $this->manager->mergeConfig( $merge = $this->getMergeConfig(), true );
+        $this->manager->mergeConfig($merge = $this->getMergeConfig(), true);
 
         // Check that the extra_field is present
         $this->assertEquals(
@@ -48,19 +47,19 @@ class ConfigTest extends TestCase
 
     public function testWontMerge()
     {
-        $this->expectException( SettingsException::class );
-        $this->manager->mergeConfig( $merge = $this->getMergeConfig() );
+        $this->expectException(SettingsException::class);
+        $this->manager->mergeConfig($merge = $this->getMergeConfig());
     }
 
     protected function getRepository() : Repository
     {
-        return new Repository( $this->getConfig() );
+        return new Repository($this->getConfig());
     }
 
-    protected function getManager( Repository $config ) : SettingsManager
+    protected function getManager(Repository $config) : SettingsManager
     {
-        return app()->makeWith( \Loaf\Settings\SettingsManager::class, [
-            'config' => $config
+        return app()->makeWith(\Loaf\Settings\SettingsManager::class, [
+            'config' => $config,
         ]);
     }
 
@@ -73,12 +72,12 @@ class ConfigTest extends TestCase
                         'fields' => [
                             'extra_field' => [
                                 'label' => 'Website Name',
-                                'type' => 'string'
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                'type'  => 'string',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -86,24 +85,23 @@ class ConfigTest extends TestCase
     {
         return [
             'general' => [
-                'label' => 'General',
-                'order' => 100,
+                'label'  => 'General',
+                'order'  => 100,
                 'groups' => [
                     'website' => [
-                        'label' => 'Website',
-                        'order' => 10,
+                        'label'  => 'Website',
+                        'order'  => 10,
                         'fields' => [
                             'website_name' => [
-                                'label' => 'Website Name',
+                                'label'   => 'Website Name',
                                 'comment' => 'This is the name shown to the user',
-                                'type' => 'string',
-                                'order' => 10
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+                                'type'    => 'string',
+                                'order'   => 10,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
-
 }

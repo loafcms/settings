@@ -5,19 +5,19 @@ namespace Loaf\Settings\Models;
 class IntegerSetting extends BaseSetting
 {
     /**
-     * Convert the value to an integer
-     * 
-     * @inheritdoc
+     * Convert the value to an integer.
+     *
+     * {@inheritdoc}
      */
-    public function serialize( $value )
+    public function serialize($value)
     {
         return (int) $value;
     }
 
     /**
-     * Serialize the value to an integer
+     * Serialize the value to an integer.
      *
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function deserialize($value)
     {

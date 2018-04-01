@@ -5,11 +5,11 @@ namespace Loaf\Settings\Models;
 class BooleanSetting extends BaseSetting
 {
     /**
-     * Convert the value to a bool
-     * 
-     * @inheritdoc
+     * Convert the value to a bool.
+     *
+     * {@inheritdoc}
      */
-    public function serialize( $value )
+    public function serialize($value)
     {
         return (bool) $value;
     }

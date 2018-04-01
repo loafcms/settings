@@ -3,8 +3,8 @@
 namespace Loaf\Settings\Database\Seeds;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -20,12 +20,11 @@ class RolesAndPermissionsSeeder extends Seeder
         ];
 
         $super_admin = Role::firstOrCreate(['name'=>'super-admin', 'guard_name'=>'loaf']);
-        foreach( $permissions as $permission ) {
+        foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'loaf']);
-            if( !$super_admin->hasPermissionTo( $permission) ){
-                $super_admin->givePermissionTo( $permission );
+            if (!$super_admin->hasPermissionTo($permission)) {
+                $super_admin->givePermissionTo($permission);
             }
         }
-
     }
 }

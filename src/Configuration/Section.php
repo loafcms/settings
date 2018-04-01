@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 class Section extends BaseConfigElement
 {
     protected $map = [
-        'group' => Group::class
+        'group' => Group::class,
     ];
 
     /**
@@ -23,9 +23,8 @@ class Section extends BaseConfigElement
     public function getConfigValidationRules()
     {
         return parent::getConfigValidationRules() + [
-            'label' => 'nullable|string',
+            'label'  => 'nullable|string',
             'groups' => 'nullable|array',
         ];
     }
-
 }

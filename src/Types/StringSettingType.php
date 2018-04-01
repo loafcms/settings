@@ -9,6 +9,6 @@ class StringSettingType extends BaseSettingType
 {
     public function makeModel(): SettingModel
     {
-        return new SimpleSetting( $this->field );
+        return new SimpleSetting($this->field);
     }
 }

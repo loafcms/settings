@@ -6,11 +6,9 @@ use Loaf\Settings\Configuration\Field;
 use Loaf\Settings\Models\SettingModel;
 
 /**
- * Class SettingTypeConfig
+ * Class SettingTypeConfig.
  *
  * Class specifying a type of setting
- *
- * @package Loaf\Settings
  */
 abstract class BaseSettingType implements SettingType
 {
@@ -30,9 +28,9 @@ abstract class BaseSettingType implements SettingType
     protected $model;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function __construct( string $type, Field $field )
+    public function __construct(string $type, Field $field)
     {
         $this->type = $type;
         $this->field = $field;
@@ -40,7 +38,7 @@ abstract class BaseSettingType implements SettingType
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getField(): Field
     {
@@ -48,7 +46,7 @@ abstract class BaseSettingType implements SettingType
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getType(): string
     {
@@ -56,7 +54,7 @@ abstract class BaseSettingType implements SettingType
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getModel(): SettingModel
     {
@@ -64,21 +62,22 @@ abstract class BaseSettingType implements SettingType
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFormName($key = '_value'): string
     {
         $field_path = $this->field->getPath();
         $name = $field_path;
 
-        if( $key )
+        if ($key) {
             $name .= ".$key";
+        }
 
         return 'settings['.str_replace('.', '][', $name).']';
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getValidationKey($key = '_value') : string
     {
@@ -86,7 +85,7 @@ abstract class BaseSettingType implements SettingType
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getLabel($key = '_value'): string
     {
@@ -94,7 +93,7 @@ abstract class BaseSettingType implements SettingType
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getId($key = '_value'): string
     {
@@ -102,15 +101,16 @@ abstract class BaseSettingType implements SettingType
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFormKey($key = null): string
     {
         $field_path = $this->field->getPath();
         $name = $field_path;
 
-        if( $key )
+        if ($key) {
             $name .= ".$key";
+        }
 
         return "settings.$name";
     }
@@ -118,35 +118,34 @@ abstract class BaseSettingType implements SettingType
     /**
      * @return SettingModel return an instantiated settings model
      */
-    protected abstract function makeModel() : SettingModel;
+    abstract protected function makeModel() : SettingModel;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getEditView()
     {
         return view('loaf/settings::types/base/edit', [
-            'type' => $this
+            'type' => $this,
         ]);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getEditValidationRules() : array
     {
         return [
-            '_value' => []
+            '_value' => [],
         ];
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function parseEditFormData( array $data ) : array
+    public function parseEditFormData(array $data) : array
     {
         // Always save the data but set it to null if not supplied
-        return [ true, $data['_value'] ?? null ];
+        return [true, $data['_value'] ?? null];
     }
-
 }
