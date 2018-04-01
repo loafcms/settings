@@ -1,6 +1,12 @@
 @extends('loaf/admin::layouts.admin.card.single')
 
-@section('card-1-before', Form::open(['url'=>route('admin.settings.updateSection', ['section' => $section->getPath()])]))
+@section('card-1-before', Form::open([
+    'url'=>route('admin.settings.updateSection', [
+        'section' => $section->getPath()
+    ]),
+    'enctype'=>'multipart/form-data'
+]))
+
 @section('card-1-title', ucfirst(__('loaf/settings::settings.edit settings', ['section' => $section->label])) )
 
 @section('card-1-content')

@@ -1,2 +1,9 @@
 {{-- TODO: Remove the json encode --}}
-<input type="text" class="form-control" id="input-{{ $field->getKey() }}" placeholder="{{ $field->getLabel() }}" value="{{ json_encode( $field->get() ) }}">
+@include('loaf/admin::partials.forms.fields.text', [
+    'id' => $type->getId(),
+    'label' => $type->getLabel(),
+    'name' => $type->getFormName(),
+    'value' => json_encode( $type->getField()->get() ),
+    'placeholder' => $type->getLabel(),
+    'horizontal' => [3,9]
+])

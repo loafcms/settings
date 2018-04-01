@@ -1,6 +1,8 @@
-<div class="form-check">
-    <input type="checkbox" class="form-check-input" id="input-{{ $field->getKey() }}" {{ $field->get() ? 'checked' : '' }}>
-    <label class="form-check-label" for="input-{{ $field->getKey() }}">
-        {{ $field->getDescription()  }}
-    </label>
-</div>
+@include('loaf/admin::partials.forms.fields.checkbox', [
+    'id' => $type->getId(),
+    'name' => $type->getFormName(),
+    'description' => $type->getDescription(),
+    'label' => $type->getLabel(),
+    'checked' => $type->getField()->get(),
+    'horizontal' => [3,9]
+])
