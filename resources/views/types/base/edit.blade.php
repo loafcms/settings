@@ -3,7 +3,7 @@
     'id' => $type->getId(),
     'label' => $type->getLabel(),
     'name' => $type->getFormName(),
-    'value' => json_encode( $type->getField()->get() ),
+    'value' => Settings::get( $type->getField()->getPath() ),
     'placeholder' => $type->getLabel(),
     'horizontal' => [3,9]
 ])
