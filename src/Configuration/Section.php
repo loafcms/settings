@@ -15,6 +15,9 @@ class Section extends BaseConfigElement
      */
     public $groups;
 
+    /**
+     * @return string e.g. section
+     */
     public function getPath() : string
     {
         return $this->key;

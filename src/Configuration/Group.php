@@ -29,6 +29,9 @@ class Group extends BaseConfigElement
         ];
     }
 
+    /**
+     * @return string e.g. section.group
+     */
     public function getPath() : string
     {
         return $this->parent->getPath().'.'.$this->key;

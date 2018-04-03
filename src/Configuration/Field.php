@@ -23,13 +23,11 @@ class Field extends BaseConfigElement
         ];
     }
 
+    /**
+     * @return string e.g. section.group.field
+     */
     public function getPath() : string
     {
         return $this->parent->getPath().'.'.$this->key;
-    }
-
-    public function get($default = null)
-    {
-        return $this->getManager()->get($this->getPath(), $default);
     }
 }

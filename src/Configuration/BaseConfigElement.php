@@ -5,7 +5,6 @@ namespace Loaf\Settings\Configuration;
 use Illuminate\Contracts\Validation\Factory;
 use Loaf\Base\Contracts\Settings\ConfigElement;
 use Loaf\Settings\Configurable;
-use Loaf\Settings\SettingsManager;
 
 abstract class BaseConfigElement extends Configurable implements ConfigElement
 {
@@ -98,15 +97,5 @@ abstract class BaseConfigElement extends Configurable implements ConfigElement
             'order' => 'nullable|integer',
             'key'   => 'required',
         ];
-    }
-
-    /**
-     * Return a reference to manager.
-     *
-     * @return SettingsManager
-     */
-    protected function getManager()
-    {
-        return app(SettingsManager::class);
     }
 }
