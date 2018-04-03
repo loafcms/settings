@@ -92,8 +92,9 @@ class SettingsManager implements SettingsManagerContract
             if (!($setting = Setting::wherePath($path)->first())) {
                 return $default;
             }
-        } catch ( \PDOException $e ) {
-            Log::warning("Got PDOException when getting setting: ".$e->getMessage());
+        } catch (\PDOException $e) {
+            $this->log->warning('Got PDOException when getting setting: '.$e->getMessage());
+
             return $default;
         }
 
@@ -260,6 +261,7 @@ class SettingsManager implements SettingsManagerContract
         if (!$this->sections->has($section)) {
             throw new SettingsException("Section $section not found");
         }
+
         return $this->sections->get($section);
     }
 
@@ -280,6 +282,7 @@ class SettingsManager implements SettingsManagerContract
         if (!$section->groups->has($group)) {
             throw new SettingsException("Group $path not found");
         }
+
         return $section->groups->get($group);
     }
 
@@ -300,6 +303,7 @@ class SettingsManager implements SettingsManagerContract
         if (!$group->fields->has($field)) {
             throw new SettingsException("Field $path not found");
         }
+
         return $group->fields->get($field);
     }
 
