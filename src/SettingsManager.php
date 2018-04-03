@@ -88,7 +88,12 @@ class SettingsManager implements SettingsManagerContract
     {
         $field = $this->getField($path);
 
-        if (!($setting = Setting::wherePath($path)->first())) {
+        try {
+            if (!($setting = Setting::wherePath($path)->first())) {
+                return $default;
+            }
+        } catch ( \PDOException $e ) {
+            Log::warning("Got PDOException when getting setting: ".$e->getMessage());
             return $default;
         }
 
