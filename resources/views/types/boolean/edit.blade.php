@@ -3,6 +3,6 @@
     'name' => $type->getFormName(),
     'description' => $type->getDescription(),
     'label' => $type->getLabel(),
-    'checked' => Settings::get( $type->getField()->getPath() ),
+    'checked' => $value,
     'horizontal' => [3,9]
 ])

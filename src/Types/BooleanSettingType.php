@@ -28,10 +28,11 @@ class BooleanSettingType extends BaseSettingType
     /**
      * {@inheritdoc}
      */
-    public function getEditView()
+    public function getEditView($value)
     {
         return view('loaf/settings::types/boolean/edit', [
-            'type' => $this,
+            'type'  => $this,
+            'value' => $value,
         ]);
     }
 

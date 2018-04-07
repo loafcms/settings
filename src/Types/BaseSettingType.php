@@ -123,10 +123,11 @@ abstract class BaseSettingType implements SettingType
     /**
      * {@inheritdoc}
      */
-    public function getEditView()
+    public function getEditView($value)
     {
         return view('loaf/settings::types/base/edit', [
-            'type' => $this,
+            'type'  => $this,
+            'value' => $value,
         ]);
     }
 

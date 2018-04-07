@@ -41,9 +41,11 @@ interface SettingType
     /**
      * Returns the edit model for this type.
      *
+     * @param mixed $value Current value of the setting
+     *
      * @return mixed
      */
-    public function getEditView();
+    public function getEditView($value);
 
     /**
      * Get the form name for a setting field.
